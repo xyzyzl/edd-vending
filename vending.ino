@@ -73,6 +73,7 @@ void move_motor(int i)
   s[i].writeMicroseconds(1500);
   delay(500);
   // move motor back
+  move_from(i);
 }
 
 void setup() {
