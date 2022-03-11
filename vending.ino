@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-#include <Stepper.h>
+#include <CheapStepper.h>
 #include <Servo.h>
 
 LiquidCrystal lcd(12,11,5,4,3,2);
@@ -7,58 +7,53 @@ int but = 6, pir = 10;
 int but2 = 7, but3 = 8, but4 = 9; // and all of them must link to a stepper motor, which we'll get later
 bool wait = 0;
 
-int mp1 = 13, mp2 = 14, mp3 = 15, mp4 = 16, steps = 2048;
-Stepper stepper = Stepper(steps, mp1, mp2, mp3, mp4);
+int mp1 = 13, mp2 = 14, mp3 = 15, mp4 = 16;
+CheapStepper stepperx(mp1, mp2, mp3, mp4);
+int mp5 = 25, mp6 = 26, mp7 = 27, mp8 = 28;
+CheapStepper steppery(mp5, mp6, mp7, mp8);
 Servo s[4];
 
-int x[4] = {69, 69, 69, 69};
+int x[4] = {69, 69, 69, 69}; // will need to take measurements later
 int y[4] = {69, 69, 69, 69};
 int xn = 69, yn = 69; // neutral position, at the bottom near the recepticle
 
 void move_to(int i)
 {
-  int sx = x[i] - xn;
-  int sy = y[i] - xn;
+  int sx = abs(x[i] - xn);
+  int sy = abs(y[i] - xn);
   // number of steps between neutral and the ith slot
   // set direction to 0 if sx < 0 amd 1 if sx > 0
   // move horizontal stepper sx steps
   for(int i = 0; i < sx; i++)
   {
     // start move here
-    delayMicroseconds(300);
-    // stop move here
+    stepperx.moveDegrees(1, sx); // will need to measure for exact values
     delayMicroseconds(300);
   }
   // repeat the same with y
   for(int i = 0; i < sy; i++)
   {
-    // start
-    delayMicroseconds(300);
-    // stop
+    steppery.moveDegrees(1, sy); // will need to measure for exact values
     delayMicroseconds(300);
   }
 }
 
 void move_from(int i)
 {
-  int sx = xn - x[i];
-  int sy = yn - y[i];
+  int sx = abs(xn - x[i]);
+  int sy = abs(yn - y[i]);
   // number of steps between neutral and the ith slot
   // set direction to 0 if sx < 0 amd 1 if sx > 0
   // move horizontal stepper sx steps
   for(int i = 0; i < sx; i++)
   {
-    // start move here
-    delayMicroseconds(300);
-    // stop move here
+    stepperx.moveDegrees(0, sx);
     delayMicroseconds(300);
   }
   // repeat the same with y
   for(int i = 0; i < sy; i++)
   {
-    // start
-    delayMicroseconds(300);
-    // stop
+    steppery.moveDegrees(0, sy);
     delayMicroseconds(300);
   }
 }
@@ -67,10 +62,10 @@ void move_motor(int i)
 {
   // move motor to index x[i], y[i] specifically
   move_to(i);
-  // rotate as needed with servo
-  s[i].writeMicroseconds(2000);
+  // rotate as needed with servo (measure how much it needs to rotate to knock one thing off)
+  s[i].write(180);
   delay(950);
-  s[i].writeMicroseconds(1500);
+  s[i].write(90);
   delay(500);
   // move motor back
   move_from(i);
@@ -106,7 +101,11 @@ void setup() {
   pinMode(pir, INPUT);
 
   // initialize stepper motor
-  stepper.setSpeed(8);
+  stepperx.setRpm(20);
+  steppery.setRpm(20);
+
+  // initialize servo
+  for(int i = 0; i < 4; i++) s[i].attach(20+i);
 }
 
 int pre = 0, pre2 = 0, pre3 = 0, pre4 = 0;
