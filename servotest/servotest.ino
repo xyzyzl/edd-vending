@@ -36,7 +36,7 @@ void setup() {
 
     // PIR initialization
     Serial.print("Intializing sensor ");
-    for(int x = 0; x < 20; x++) //Initialization lasts for 20 sec
+    for(int x = 0; x < 10; x++) //Initialization lasts for 20 sec
     {
         Serial.print(".");
         delay(1000);
@@ -59,6 +59,7 @@ void loop() {
     bool buttonPressed = false;
     for (int i = 0; i < 4; ++i)
         buttonPressed = buttonPressed || digitalRead(but[i]);
+        
     if (buttonPressed)
     {
         Serial.println("Button pressed! Dispensing item...");
@@ -67,26 +68,21 @@ void loop() {
 
     if (digitalRead(but[0]))
         s0.write(90 + v);
-    else
-        s0.write(90);
-
-    if (digitalRead(but[1]))
+    else if (digitalRead(but[1]))
         s1.write(90 + v);
-    else
-        s1.write(90);
-
-    if (digitalRead(but[2]))
+    else if (digitalRead(but[2]))
         s2.write(90 + v);
-    else
-        s2.write(90);
-
-    if (digitalRead(but[3]))
+    else if (digitalRead(but[3]))
         s3.write(90 + v);
-    else
-        s3.write(90);
 
     if (buttonPressed)
+    {
         delay(1000);
+        s0.write(90);
+        s1.write(90);
+        s2.write(90);
+        s3.write(90);
+    }
 
     // debug
 //  Serial.println("Update:");
