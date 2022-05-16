@@ -24,10 +24,10 @@ void setup() {
         pinMode(but[i], INPUT);
     }
     
-    s0.attach(22);
-    s1.attach(24);
-    s2.attach(26);
-    s3.attach(28);
+    s0.attach(A1);
+    s1.attach(A2);
+    s2.attach(A3);
+    s3.attach(A4);
     
     s0.write(90);
     s1.write(90);
@@ -36,16 +36,20 @@ void setup() {
 
     // PIR initialization
     Serial.print("Intializing sensor ");
-    for(int x = 0; x < 10; x++) //Initialization lasts for 20 sec
-    {
-        Serial.print(".");
-        delay(1000);
-    }
-    Serial.println(" done");
+//    for(int x = 0; x < 10; x++) //Initialization lasts for 20 sec
+//    {
+//        Serial.print(".");
+//        delay(1000);
+//    }
+//    Serial.println(" done");
     Serial.println("SENSOR ACTIVE");
 }
 
 void loop() {
+    //debug
+//      Serial.println("Update:");
+//      Serial.println(s2.read());
+    
     if (!paid)
     {
         if (digitalRead(PIRPin))
@@ -83,8 +87,4 @@ void loop() {
         s2.write(90);
         s3.write(90);
     }
-
-    // debug
-//  Serial.println("Update:");
-//  Serial.println(s0.read());
 }
