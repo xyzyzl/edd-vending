@@ -3,6 +3,10 @@
 // speed of servo
 const int v = 8;
 
+// LCD
+// TODO: change to actual pins
+const LiquidCrystal lcd(12,11,5,4,3,2);
+
 // pins
 const int ser[4] = {22, 24, 26, 28};
 const int but[4] = {6, 7, 8, 9};
@@ -17,6 +21,14 @@ bool paid = false;
 void setup() {
     // debug
     Serial.begin(9600);
+
+    lcd.begin(16,2);
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Insert a million");
+    lcd.setCursor(0,1);
+    lcd.print("dollars now");
+    
     
     for (int i = 0; i < 4; ++i)
     {
@@ -56,6 +68,10 @@ void loop() {
         {
             paid = true;
             Serial.println("Coin detected!");
+
+            lcd.clear();
+            lcd.setCursor(0,0);
+            lcd.print("$$ found");
         }
         return;
     }
@@ -67,6 +83,10 @@ void loop() {
     if (buttonPressed)
     {
         Serial.println("Button pressed! Dispensing item...");
+
+        lcd.setCursor(0,0);
+        lcd.print("Dispensing...");
+        
         paid = false;
     }
 
@@ -86,5 +106,11 @@ void loop() {
         s1.write(90);
         s2.write(90);
         s3.write(90);
+
+        lcd.clear();
+        lcd.setCursor(0,0);
+        lcd.print("Insert a million");
+        lcd.setCursor(0,1);
+        lcd.print("dollars now");
     }
 }
