@@ -1,3 +1,4 @@
+#include <LiquidCrystal.h>
 #include <Servo.h>
 
 // speed of servo
@@ -5,10 +6,10 @@ const int v = 8;
 
 // LCD
 // TODO: change to actual pins
-const LiquidCrystal lcd(12,11,5,4,3,2);
+const LiquidCrystal lcd(4,3,2,30,32,34);
 
 // pins
-const int ser[4] = {22, 24, 26, 28};
+//const int ser[4] = {22, 24, 26, 28};
 const int but[4] = {6, 7, 8, 9};
 const int PIRPin = 5;
 
